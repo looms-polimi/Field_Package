@@ -1,1 +1,1 @@
-"# Field_Package" 
+Basic modelling components of a pilot rice farm. It contains definitions of constants (e.g. atmospheric pressure, gravity acceleration, water density etc.), classes (e.g. connectors), and subpackages (e.g. fields, canals, gates). 
