@@ -1,0 +1,121 @@
+within Field_Package.Test;
+
+model prova7
+  parameter String sheetName = "Pr_h" "Excel sheet name" annotation(
+    Evaluate = true,
+    choices(choice = "set1" "First Excel sheet", choice = "set2" "Second Excel sheet"));
+  inner parameter ExternData.XLSXFile dataSource(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data_tesi/precipitazioni_7giorni_test1.xlsx")) "XLSX file" annotation(
+    Placement(visible = true, transformation(extent = {{-212, 114}, {-192, 134}}, rotation = 0)));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {-156, 121}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = dataSource.getRealArray2D("H1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-204, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-158, 76}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable h_veg1(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = [0, 0; 120, 1.19; 171, 1.2], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-204, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable ET(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource.getRealArray2D("M1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-204, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-158, 38}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-157, 1}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+  Field_Package.Field.channel channel(L_ch = 20, z(fixed = true), z_start = 1)  annotation(
+    Placement(visible = true, transformation(origin = {38, 300}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente2 valve1(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {-119, 177}, extent = {{-13, -13}, {13, 13}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente2 valve2(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {22, 182}, extent = {{-14, -14}, {14, 14}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente2 valve3(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {157, 187}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field2(A = 49000, z(fixed = true, start = 0))  annotation(
+    Placement(visible = true, transformation(origin = {71, 125}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field3(A = 60000, z(fixed = true, start = 0))  annotation(
+    Placement(visible = true, transformation(origin = {203, 127}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PI pi(T = system.rho / field1.C, initType = Modelica.Blocks.Types.Init.SteadyState, k = system.rho * field1.A * 5 / (4 * 3600), x(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {-90, 216}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Add add(k2 = -1) annotation(
+    Placement(visible = true, transformation(origin = {-60, 218}, extent = {{6, -6}, {-6, 6}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PI pi1(T = system.rho / field2.C, initType = Modelica.Blocks.Types.Init.SteadyState, k = system.rho * field2.A * 5 / (4 * 3600), x(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {44, 220}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Add add1(k2 = -1) annotation(
+    Placement(visible = true, transformation(origin = {76, 220}, extent = {{6, -6}, {-6, 6}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PI pi2(T = system.rho / field3.C, initType = Modelica.Blocks.Types.Init.SteadyState, k = system.rho * field3.A * 5 / (4 * 3600), x(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {182, 222}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Add add2(k2 = -1) annotation(
+    Placement(visible = true, transformation(origin = {215, 221}, extent = {{7, -7}, {-7, 7}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source annotation(
+    Placement(visible = true, transformation(origin = {-30, 306}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.RealExpression realExpression3(y = 450) annotation(
+    Placement(visible = true, transformation(origin = {-81, 317}, extent = {{-17, -11}, {17, 11}}, rotation = 0)));
+  Field_Package.Valves.valve_stramazzo_unidirezionale valve_stramazzo_unidirezionale(L = 2, height_port_a = 1, height_port_b = 5)  annotation(
+    Placement(visible = true, transformation(origin = {106, 306}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Field_Package.Sources.fuga fuga annotation(
+    Placement(visible = true, transformation(origin = {146, 306}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field1(A = 89000, z(fixed = true, start = 0))  annotation(
+    Placement(visible = true, transformation(origin = {-68, 122}, extent = {{20, -20}, {-20, 20}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable z_ref(smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = [0, 0; 35, 0.05; 48, 0.08; 60, 0; 67, 0.08; 106, 0.05; 127, 0; 148, 0], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-110, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+equation
+  connect(combiTimeTable.y[1], rain.R) annotation(
+    Line(points = {{-193, 78}, {-183.5, 78}, {-183.5, 79}, {-171, 79}}, color = {0, 0, 127}));
+  connect(h_veg1.y[1], h_veg_data.h) annotation(
+    Line(points = {{-193, 40}, {-182, 40}, {-182, 41}, {-171, 41}}, color = {0, 0, 127}));
+  connect(ET.y[1], et_data.ET) annotation(
+    Line(points = {{-193, 0}, {-182.5, 0}, {-182.5, 1}, {-170, 1}}, color = {0, 0, 127}));
+  connect(channel.Port, valve1.a_batt) annotation(
+    Line(points = {{37, 283}, {37, 246}, {-142, 246}, {-142, 171}, {-132, 171}}));
+  connect(channel.Port, valve2.a_batt) annotation(
+    Line(points = {{37, 283}, {37, 246}, {0, 246}, {0, 175.125}, {8, 175.125}, {8, 175}}));
+  connect(channel.Port, valve3.a_batt) annotation(
+    Line(points = {{37, 283}, {37, 246}, {132, 246}, {132, 180}, {142, 180}}));
+  connect(field2.Port, valve2.b_batt) annotation(
+    Line(points = {{71, 108}, {71, 107}, {36, 107}, {36, 175}}));
+  connect(field3.Port, valve3.b_batt) annotation(
+    Line(points = {{203, 110}, {172, 110}, {172, 180}}));
+  connect(add1.y, pi1.u) annotation(
+    Line(points = {{69, 220}, {56, 220}}, color = {0, 0, 127}));
+  connect(pi1.y, valve2.x) annotation(
+    Line(points = {{33, 220}, {21, 220}, {21, 194}}, color = {0, 0, 127}));
+  connect(field2.y, add1.u2) annotation(
+    Line(points = {{89, 121}, {96, 121}, {96, 216}, {83, 216}}, color = {0, 0, 127}));
+  connect(add2.y, pi2.u) annotation(
+    Line(points = {{207.3, 221}, {207.3, 222}, {194, 222}}, color = {0, 0, 127}));
+  connect(pi2.y, valve3.x) annotation(
+    Line(points = {{171, 222}, {156, 222}, {156, 200}}, color = {0, 0, 127}));
+  connect(field3.y, add2.u2) annotation(
+    Line(points = {{221, 123}, {236, 123}, {236, 217}, {223, 217}}, color = {0, 0, 127}));
+  connect(constant_flow_source.a, channel.Port) annotation(
+    Line(points = {{-19, 306}, {5.5, 306}, {5.5, 265}, {36.25, 265}, {36.25, 283}, {37, 283}}));
+  connect(realExpression3.y, constant_flow_source.k) annotation(
+    Line(points = {{-62, 317}, {-50.5, 317}, {-50.5, 315}, {-39, 315}}, color = {0, 0, 127}));
+  connect(valve_stramazzo_unidirezionale.a_stram, channel.Port) annotation(
+    Line(points = {{89, 306}, {82, 306}, {82, 266}, {37, 266}, {37, 283}}));
+  connect(fuga.a, valve_stramazzo_unidirezionale.b_stram) annotation(
+    Line(points = {{136, 306}, {122, 306}}));
+  connect(field1.Port, valve1.b_batt) annotation(
+    Line(points = {{-69, 101}, {-98.4, 101}, {-98.4, 171}, {-106, 171}}));
+  connect(add.y, pi.u) annotation(
+    Line(points = {{-66, 218}, {-78, 218}, {-78, 216}}, color = {0, 0, 127}));
+  connect(pi.y, valve1.x) annotation(
+    Line(points = {{-100, 216}, {-120, 216}, {-120, 188}}, color = {0, 0, 127}));
+  connect(field1.y, add.u2) annotation(
+    Line(points = {{-47, 117}, {-28, 117}, {-28, 214}, {-52, 214}}, color = {0, 0, 127}));
+  connect(z_ref.y[1], add.u1) annotation(
+    Line(points = {{-98, 38}, {-12, 38}, {-12, 222}, {-52, 222}}, color = {0, 0, 127}));
+  connect(z_ref.y[1], add1.u1) annotation(
+    Line(points = {{-98, 38}, {122, 38}, {122, 224}, {84, 224}}, color = {0, 0, 127}));
+  connect(z_ref.y[1], add2.u1) annotation(
+    Line(points = {{-98, 38}, {262, 38}, {262, 226}, {224, 226}}, color = {0, 0, 127}));
+protected
+  annotation(Documentation(info="<html>
+<p>
+Test con <strong> 3 </strong> appezzamenti, tutti collegati al medesimo canale. Irrigati tutti con un riferimento di livello d'acqua costante, fisso a 5 centimetri. 
+Controllori PI senza azione anti-windup. 
+
+
+</p>
+</html>"),
+    Diagram(coordinateSystem(extent = {{-220, 360}, {280, -20}}), graphics = {Rectangle(origin = {-60, 311}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-56, 33}, {56, -33}}), Text(origin = {-99, 284}, extent = {{-21, 2}, {21, -2}}, textString = "source")}),
+    experiment(StartTime = 0, StopTime = 1.4778e+07, Tolerance = 1e-06, Interval = 60));
+end prova7;

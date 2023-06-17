@@ -1,0 +1,40 @@
+within Field_Package.Test;
+
+model prova2
+  Field_Package.Field.field2_singleport field(A = 89000, C = 0.01, z(fixed = true), z_start = 0.05) annotation(
+    Placement(visible = true, transformation(origin = {-26, 52}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source source1 annotation(
+    Placement(visible = true, transformation(origin = {-36, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.RealExpression realExpression(y = 60) annotation(
+    Placement(visible = true, transformation(origin = {-74, -38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {36, 103}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  inner parameter ExternData.XLSXFile dataSource(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data_tesi/precipitazioni_7giorni_test1.xlsx")) annotation(
+    Placement(visible = true, transformation(extent = {{-210, 92}, {-190, 112}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-154, 24}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable ET(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource.getRealArray2D("M1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-200, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable h_veg1(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = [0, 0; 120, 1.19; 171, 1.2], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-200, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-154, 62}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = dataSource.getRealArray2D("H1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-200, 64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-154, -12}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+equation
+  connect(realExpression.y, source1.k) annotation(
+    Line(points = {{-63, -38}, {-63, 12}, {-59, 12}, {-59, 11.5}, {-45, 11.5}, {-45, 13}}, color = {0, 0, 127}));
+  connect(source1.a, field.Port) annotation(
+    Line(points = {{-25, 4}, {-26.4, 4}, {-26.4, 25.6}, {-26, 25.6}, {-26, 34}}));
+  connect(combiTimeTable.y[1], rain.R) annotation(
+    Line(points = {{-188, 64}, {-168, 64}}, color = {0, 0, 127}));
+  connect(h_veg1.y[1], h_veg_data.h) annotation(
+    Line(points = {{-188, 26}, {-168, 26}}, color = {0, 0, 127}));
+  connect(ET.y[1], et_data.ET) annotation(
+    Line(points = {{-188, -12}, {-168, -12}}, color = {0, 0, 127}));
+  annotation(
+    experiment(StartTime = 0, StopTime = 900000, Tolerance = 1e-06, Interval = 60),
+    Diagram(coordinateSystem(extent = {{-220, 120}, {60, -60}})));
+end prova2;

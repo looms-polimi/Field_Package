@@ -1,0 +1,70 @@
+within Field_Package.Test;
+
+model prova11
+  parameter String sheetName = "Pr_h" "Excel sheet name" annotation(
+    Evaluate = true,
+    choices(choice = "set1" "First Excel sheet", choice = "set2" "Second Excel sheet"));
+  inner parameter ExternData.XLSXFile dataSource(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data_tesi/precipitazioni_per_validazione.xlsx")) "XLSX file" annotation(
+    Placement(visible = true, transformation(extent = {{-248, 394}, {-228, 414}}, rotation = 0)));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {-190, 403}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = dataSource.getRealArray2D("D25778", "RW_20230131150310_530543_2195_4", 690, 2)) annotation(
+    Placement(visible = true, transformation(origin = {-240, 360}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-192, 358}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable h_veg1(smoothness = Modelica.Blocks.Types.Smoothness.MonotoneContinuousDerivative1, table = [0, 0], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-238, 322}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable ET(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = [0, 0], timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-238, 282}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-192, 320}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-191, 283}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+  inner parameter ExternData.XLSFile dataSource1(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data_tesi/validation1.xls"))  annotation(
+    Placement(visible = true, transformation(origin = {-134, 316}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable RealdData_level(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource1.getRealArray2D("O3", "TEST (2)", 1183, 2), verboseRead = true) annotation(
+    Placement(visible = true, transformation(origin = {-6, 310}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source1 annotation(
+    Placement(visible = true, transformation(origin = {-70, 116}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable2(extrapolation = Modelica.Blocks.Types.Extrapolation.LastTwoPoints, smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource1.getRealArray2D("B3", "TEST (2)", 1183, 2)) annotation(
+    Placement(visible = true, transformation(origin = {-132, 126}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Field.field2_singleport A20000_c002(A = 20000, C = 0.02, z(fixed = true, start = 0)) annotation(
+    Placement(visible = true, transformation(origin = {-5, 145}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable21(extrapolation = Modelica.Blocks.Types.Extrapolation.LastTwoPoints, smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource1.getRealArray2D("B3", "TEST (2)", 1183, 2)) annotation(
+    Placement(visible = true, transformation(origin = {-126, 206}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source11 annotation(
+    Placement(visible = true, transformation(origin = {-64, 196}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Field.field2_singleport A20000_c001(A = 20000, C = 0.01, z(fixed = true, start = 0)) annotation(
+    Placement(visible = true, transformation(origin = {-5, 227}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Field_Package.Field.field2_singleport A20000_c004(A = 20000, C = 0.04, z(fixed = true, start = 0)) annotation(
+    Placement(visible = true, transformation(origin = {-7, 55}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable22(extrapolation = Modelica.Blocks.Types.Extrapolation.LastTwoPoints, smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource1.getRealArray2D("B3", "TEST (2)", 1183, 2)) annotation(
+    Placement(visible = true, transformation(origin = {-134, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source12 annotation(
+    Placement(visible = true, transformation(origin = {-72, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+equation
+  connect(combiTimeTable.y[1], rain.R) annotation(
+    Line(points = {{-229, 360}, {-217.5, 360}, {-217.5, 361}, {-205, 361}}, color = {0, 0, 127}));
+  connect(h_veg1.y[1], h_veg_data.h) annotation(
+    Line(points = {{-227, 322}, {-216, 322}, {-216, 323}, {-205, 323}}, color = {0, 0, 127}));
+  connect(ET.y[1], et_data.ET) annotation(
+    Line(points = {{-227, 282}, {-216.5, 282}, {-216.5, 283}, {-204, 283}}, color = {0, 0, 127}));
+  connect(constant_flow_source1.a, A20000_c002.Port) annotation(
+    Line(points = {{-59.4, 115.6}, {-6.4, 115.6}, {-6.4, 126.6}}));
+  connect(combiTimeTable2.y[1], constant_flow_source1.k) annotation(
+    Line(points = {{-121, 126}, {-103.5, 126}, {-103.5, 125}, {-79, 125}}, color = {0, 0, 127}));
+  connect(combiTimeTable21.y[1], constant_flow_source11.k) annotation(
+    Line(points = {{-115, 206}, {-75, 206}}, color = {0, 0, 127}));
+  connect(constant_flow_source11.a, A20000_c001.Port) annotation(
+    Line(points = {{-53.4, 195.6}, {-6, 195.6}, {-6, 209}}));
+  connect(combiTimeTable22.y[1], constant_flow_source12.k) annotation(
+    Line(points = {{-122, 36}, {-82, 36}}, color = {0, 0, 127}));
+  connect(constant_flow_source12.a, A20000_c004.Port) annotation(
+    Line(points = {{-62, 26}, {-8, 26}, {-8, 37}}));
+protected
+  annotation(
+    Documentation(info = "<html><head></head><body><p>validation test</p><p><br></p>
+</body></html>"),
+    Diagram(coordinateSystem(extent = {{-260, 420}, {200, -20}}), graphics = {Rectangle(origin = {-88, 135}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-56, 33}, {56, -33}}), Text(origin = {-125, 108}, extent = {{-21, 2}, {21, -2}}, textString = "source"), Rectangle(origin = {-82, 215}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-56, 33}, {56, -33}}), Text(origin = {-119, 188}, extent = {{-21, 2}, {21, -2}}, textString = "source"), Text(origin = {-127, 18}, extent = {{-21, 2}, {21, -2}}, textString = "source"), Rectangle(origin = {-90, 45}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-56, 33}, {56, -33}}), Text(origin = {-121, 20}, extent = {{-21, 2}, {21, -2}}, textString = "source")}),
+    experiment(StartTime = 0, StopTime = 407000, Tolerance = 1e-06, Interval = 120.024));
+end prova11;

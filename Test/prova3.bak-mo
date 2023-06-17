@@ -1,0 +1,60 @@
+within Field_Package.Test;
+
+model prova3
+  parameter String sheetName = "Pr_h" "Excel sheet name" annotation(
+    Evaluate = true,
+    choices(choice = "set1" "First Excel sheet", choice = "set2" "Second Excel sheet"));
+  inner parameter ExternData.XLSXFile dataSource(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data_tesi/precipitazioni_7giorni_test1.xlsx")) "XLSX file" annotation(
+    Placement(visible = true, transformation(extent = {{-216, 108}, {-196, 128}}, rotation = 0)));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {-152, 123}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  Modelica.Blocks.Sources.RealExpression realExpression1(y = 10)  annotation(
+    Placement(visible = true, transformation(origin = {91, 60}, extent = {{11, -14}, {-11, 14}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = dataSource.getRealArray2D("H1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-204, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-158, 78}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Field_Package.Field.channel channel(L_ch = 10, bh = 2, bl = 2, z(fixed = true), z_max = 2) annotation(
+    Placement(visible = true, transformation(origin = {12, 86}, extent = {{-14, -14}, {14, 14}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source1 annotation(
+    Placement(visible = true, transformation(origin = {52, 50}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_stramazzo valve_stramazzo(L = 1, height_port_a = 1, height_port_b = 1) annotation(
+    Placement(visible = true, transformation(origin = {-46, 48}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field2_singleport(A = 40) annotation(
+    Placement(visible = true, transformation(origin = {-84, 76}, extent = {{-24, -24}, {24, 24}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable h_veg1(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = [0, 0; 120, 1.19; 171, 1.2], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-204, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable ET(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource.getRealArray2D("M1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-204, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-158, 2.22045e-15}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-158, 38}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Field_Package.Sources.fuga fuga4 annotation(
+    Placement(visible = true, transformation(origin = {-36, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_stramazzo_unidirezionale valve_stramazzo_unidirezionale4(L = 1, height_port_a = 1.2, height_port_b = 5)  annotation(
+    Placement(visible = true, transformation(origin = {0, 2}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+equation
+  connect(channel.Port, constant_flow_source1.a) annotation(
+    Line(points = {{11.58, 72.42}, {34.16, 72.42}, {34.16, 50.42}, {40.58, 50.42}}));
+  connect(constant_flow_source1.k, realExpression1.y) annotation(
+    Line(points = {{61.2, 59}, {75.4, 59}, {75.4, 60}, {79.2, 60}}, color = {0, 0, 127}));
+  connect(valve_stramazzo.b_stram, channel.Port) annotation(
+    Line(points = {{-35.2, 48}, {2.2, 48}, {2.2, 72}, {11.8, 72}}));
+  connect(field2_singleport.Port, valve_stramazzo.a_stram) annotation(
+    Line(points = {{-83.52, 52.48}, {-72.48, 52.48}, {-72.48, 48.48}, {-56.52, 48.48}}));
+  connect(combiTimeTable.y[1], rain.R) annotation(
+    Line(points = {{-193, 78}, {-183.5, 78}, {-183.5, 81}, {-171, 81}}, color = {0, 0, 127}));
+  connect(h_veg1.y[1], h_veg_data.h) annotation(
+    Line(points = {{-193, 40}, {-181.5, 40}, {-181.5, 41}, {-171, 41}}, color = {0, 0, 127}));
+  connect(ET.y[1], et_data.ET) annotation(
+    Line(points = {{-193, 0}, {-172, 0}}, color = {0, 0, 127}));
+  connect(valve_stramazzo_unidirezionale4.b_stram, fuga4.a) annotation(
+    Line(points = {{-9, 2}, {-27, 2}}));
+  connect(valve_stramazzo_unidirezionale4.a_stram, channel.Port) annotation(
+    Line(points = {{9.4, 2}, {9.4, 37}, {11.4, 37}, {11.4, 72}}));
+protected
+  annotation(
+    Diagram(coordinateSystem(extent = {{-220, 140}, {120, -40}})),
+    experiment(StartTime = 0, StopTime = 1.4778e+06, Tolerance = 1e-06, Interval = 60));
+end prova3;

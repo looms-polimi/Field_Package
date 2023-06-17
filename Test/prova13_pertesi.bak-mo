@@ -1,0 +1,92 @@
+within Field_Package.Test;
+
+model prova13_pertesi
+  parameter String sheetName = "Pr_h" "Excel sheet name" annotation(
+    Evaluate = true,
+    choices(choice = "set1" "First Excel sheet", choice = "set2" "Second Excel sheet"));
+  inner parameter ExternData.XLSXFile dataSource(fileName = Modelica.Utilities.Files.loadResource("modelica://Field_Package/Data/precipitazioni_7giorni_test1.xlsx")) "XLSX file" annotation(
+    Placement(visible = true, transformation(extent = {{-246, 396}, {-226, 416}}, rotation = 0)));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {-190, 403}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = dataSource.getRealArray2D("H1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-238, 360}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-194, 360}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable h_veg1(smoothness = Modelica.Blocks.Types.Smoothness.MonotoneContinuousDerivative1, table = [0, 0; 69, 0.4; 92, 0.6; 120, 1.19; 171, 1.2], timeScale = 3600 * 24) annotation(
+    Placement(visible = true, transformation(origin = {-238, 322}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.CombiTimeTable ET(smoothness = Modelica.Blocks.Types.Smoothness.LinearSegments, table = dataSource.getRealArray2D("M1", "Foglio1", 4105, 2), timeScale = 3600) annotation(
+    Placement(visible = true, transformation(origin = {-238, 282}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-194, 320}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-193, 281}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
+  Field_Package.Field.channel channel(C = 0.01, L_ch = 1000, z(fixed = true), z_start = 1.5) annotation(
+    Placement(visible = true, transformation(origin = {41, 289}, extent = {{-21, -21}, {21, 21}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field2(A = 49000, C = 0.01, z(fixed = true, start = 0.05)) annotation(
+    Placement(visible = true, transformation(origin = {39, 115}, extent = {{25, -25}, {-25, 25}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field3(A = 60000, C = 0.01, z(fixed = true, start = 0.05)) annotation(
+    Placement(visible = true, transformation(origin = {179, 117}, extent = {{23, -23}, {-23, 23}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source annotation(
+    Placement(visible = true, transformation(origin = {-30, 292}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.RealExpression realExpression3(y = 200) annotation(
+    Placement(visible = true, transformation(origin = {-85, 300}, extent = {{-27, -22}, {27, 22}}, rotation = 0)));
+  Field_Package.Sources.fuga fuga annotation(
+    Placement(visible = true, transformation(origin = {154, 298}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field1(A = 89000, C = 0.01, z(fixed = true, start = 0.05)) annotation(
+    Placement(visible = true, transformation(origin = {-94, 116}, extent = {{24, -24}, {-24, 24}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field4(A = 132000, C = 0.01, z(fixed = true, start = 0.05)) annotation(
+    Placement(visible = true, transformation(origin = {316, 118}, extent = {{24, -24}, {-24, 24}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve1 annotation(
+    Placement(visible = true, transformation(origin = {-171, 161}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve2 annotation(
+    Placement(visible = true, transformation(origin = {-18, 160}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve3 annotation(
+    Placement(visible = true, transformation(origin = {120, 162}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve4 annotation(
+    Placement(visible = true, transformation(origin = {255, 167}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
+  Field_Package.Valves.valve_stramazzo valve_stramazzo(L = 1, height_port_a = 1.2, height_port_b = 1.2)  annotation(
+    Placement(visible = true, transformation(origin = {106, 298}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+equation
+  connect(combiTimeTable.y[1], rain.R) annotation(
+    Line(points = {{-227, 360}, {-217.5, 360}, {-217.5, 363}, {-209, 363}}, color = {0, 0, 127}));
+  connect(h_veg1.y[1], h_veg_data.h) annotation(
+    Line(points = {{-227, 322}, {-216, 322}, {-216, 323}, {-207, 323}}, color = {0, 0, 127}));
+  connect(ET.y[1], et_data.ET) annotation(
+    Line(points = {{-227, 282}, {-216.5, 282}, {-216.5, 281}, {-208, 281}}, color = {0, 0, 127}));
+  connect(constant_flow_source.a, channel.Port) annotation(
+    Line(points = {{-19.4, 291.6}, {5.1, 291.6}, {5.1, 250.6}, {39.85, 250.6}, {39.85, 268.6}, {39.6, 268.6}}));
+  connect(realExpression3.y, constant_flow_source.k) annotation(
+    Line(points = {{-55, 300}, {-50.4, 300}, {-50.4, 301}, {-38.9, 301}}, color = {0, 0, 127}));
+  connect(valve1.b_batt, field1.Port) annotation(
+    Line(points = {{-154.17, 152.67}, {-136.17, 152.67}, {-136.17, 83.67}, {-95.17, 83.67}, {-95.17, 90.67}}));
+  connect(channel.Port, valve1.a_batt) annotation(
+    Line(points = {{40.37, 268.63}, {40.37, 235.63}, {-203.63, 235.63}, {-203.63, 152.63}, {-187.63, 152.63}}));
+  connect(channel.Port, valve2.a_batt) annotation(
+    Line(points = {{40.37, 268.63}, {40.37, 235.63}, {-41.63, 235.63}, {-41.63, 151.63}, {-33.63, 151.63}}));
+  connect(channel.Port, valve3.a_batt) annotation(
+    Line(points = {{40.37, 268.63}, {40.37, 235.63}, {88.37, 235.63}, {88.37, 153}, {102, 153}}));
+  connect(channel.Port, valve4.a_batt) annotation(
+    Line(points = {{40.37, 268.63}, {40.37, 235.63}, {216.37, 235.63}, {216.37, 159}, {238, 159}}));
+  connect(valve4.b_batt, field4.Port) annotation(
+    Line(points = {{271.83, 158.67}, {279.83, 158.67}, {279.83, 85.67}, {314.83, 85.67}, {314.83, 92.67}}));
+  connect(valve3.b_batt, field3.Port) annotation(
+    Line(points = {{137.82, 153.18}, {141.82, 153.18}, {141.82, 88.18}, {177.82, 88.18}, {177.82, 93.18}}));
+  connect(valve2.b_batt, field2.Port) annotation(
+    Line(points = {{-2.16, 152.16}, {-2.16, 82.16}, {37.84, 82.16}, {37.84, 89.16}}));
+  connect(valve_stramazzo.a_stram, channel.Port) annotation(
+    Line(points = {{90, 298}, {76, 298}, {76, 250}, {40, 250}, {40, 268}}));
+  connect(valve_stramazzo.b_stram, fuga.a) annotation(
+    Line(points = {{122, 298}, {144, 298}}));
+protected
+  annotation(
+    Documentation(info = "<html>
+<p>
+Test con <strong> 5 </strong> appezzamenti di cui 1 è collegato con un rialzamento del canale. Irrigati tutti con un riferimento di livello d'acqua ottimale ricavato dalla presentazione. 
+Controllori PI con azione anti-windup. 
+
+
+</p>
+</html>"),
+    Diagram(coordinateSystem(extent = {{-280, 440}, {360, -20}}), graphics = {Rectangle(origin = {-74, 299}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-66, 35}, {66, -35}}), Text(origin = {-97, 270}, extent = {{-53, 1}, {53, -1}}, textString = "Inflow Rate", textStyle = {TextStyle.Bold}), Rectangle(origin = {133, 300}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-59, 36}, {59, -36}}), Rectangle(origin = {-222, 339}, lineColor = {189, 255, 202}, fillColor = {230, 255, 232}, fillPattern = FillPattern.Solid, extent = {{52, 93}, {-52, -93}}), Text(origin = {-236, 260}, extent = {{-32, -2}, {32, 0}}, textString = "External Data", textStyle = {TextStyle.Bold}), Text(origin = {167, 269}, extent = {{-53, 1}, {53, -1}}, textString = "Overflow", textStyle = {TextStyle.Bold})}),
+    experiment(StartTime = 0, StopTime = 250000, Tolerance = 1e-06, Interval = 60));
+end prova13_pertesi;

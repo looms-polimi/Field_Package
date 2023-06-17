@@ -1,0 +1,121 @@
+within Field_Package.Test;
+
+model prova13_FMU
+  parameter String sheetName = "Pr_h" "Excel sheet name" annotation(
+    Evaluate = true,
+    choices(choice = "set1" "First Excel sheet", choice = "set2" "Second Excel sheet"));
+  inner Field_Package.System system annotation(
+    Placement(visible = true, transformation(origin = {-190, 397}, extent = {{-12, -11}, {12, 11}}, rotation = 0)));
+  inner Field_Package.Rain rain annotation(
+    Placement(visible = true, transformation(origin = {-191, 361}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
+  inner Field_Package.H_veg_data h_veg_data annotation(
+    Placement(visible = true, transformation(origin = {-192, 320}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+  inner Field_Package.ET_data et_data annotation(
+    Placement(visible = true, transformation(origin = {-191, 281}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
+  Field_Package.Field.channel channel(C = 0.01, L_ch = 1000, z(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {38, 300}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field2(A = 49000, z(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {73, 125}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field3(A = 60000, z(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {203, 127}, extent = {{17, -17}, {-17, 17}}, rotation = 0)));
+  Field_Package.Sources.constant_flow_source constant_flow_source annotation(
+    Placement(visible = true, transformation(origin = {-30, 306}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Sources.fuga fuga annotation(
+    Placement(visible = true, transformation(origin = {208, 296}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field1(A = 89000, z(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {-62, 124}, extent = {{20, -20}, {-20, 20}}, rotation = 0)));
+  Field_Package.Field.field2_singleport field4(A = 132000, z(fixed = true)) annotation(
+    Placement(visible = true, transformation(origin = {332, 130}, extent = {{20, -20}, {-20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput w_ch annotation(
+    Placement(visible = true, transformation(origin = {-92, 326}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-92, 326}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput Rain_input annotation(
+    Placement(visible = true, transformation(origin = {-276, 364}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-266, 360}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput height_veg annotation(
+    Placement(visible = true, transformation(origin = {-276, 320}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-248, 318}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput ET_input annotation(
+    Placement(visible = true, transformation(origin = {-276, 278}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-252, 284}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput x2 annotation(
+    Placement(visible = true, transformation(origin = {122, 120}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {122, 120}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput x3 annotation(
+    Placement(visible = true, transformation(origin = {256, 124}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {256, 124}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput x4 annotation(
+    Placement(visible = true, transformation(origin = {382, 126}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {382, 126}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput u1 annotation(
+    Placement(visible = true, transformation(origin = {-120, 218}, extent = {{-20, -20}, {20, 20}}, rotation = -90), iconTransformation(origin = {-114, 218}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput u2 annotation(
+    Placement(visible = true, transformation(origin = {22, 218}, extent = {{-20, -20}, {20, 20}}, rotation = -90), iconTransformation(origin = {-104, 228}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput u3 annotation(
+    Placement(visible = true, transformation(origin = {156, 220}, extent = {{-20, -20}, {20, 20}}, rotation = -90), iconTransformation(origin = {-94, 238}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealInput u4 annotation(
+    Placement(visible = true, transformation(origin = {290, 222}, extent = {{-20, -20}, {20, 20}}, rotation = -90), iconTransformation(origin = {-84, 248}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput x_ch annotation(
+    Placement(visible = true, transformation(origin = {174, 362}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 354}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput x1 annotation(
+    Placement(visible = true, transformation(origin = {0, 120}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {132, 130}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve_portabattente3(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {-120, 178}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve_portabattente31(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {22, 182}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve_portabattente32(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {156, 178}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_portabattente3 valve_portabattente33(r = 0.22)  annotation(
+    Placement(visible = true, transformation(origin = {290, 184}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Field_Package.Valves.valve_stramazzo valve_stramazzo(L = 1, height_port_a = 1.2, height_port_b = 1.2)  annotation(
+    Placement(visible = true, transformation(origin = {130, 298}, extent = {{-14, -14}, {14, 14}}, rotation = 0)));
+equation
+  connect(w_ch, constant_flow_source.k) annotation(
+    Line(points = {{-92, 326}, {-60, 326}, {-60, 316}, {-40, 316}}, color = {0, 0, 127}));
+  connect(Rain_input, rain.R) annotation(
+    Line(points = {{-276, 364}, {-205, 364}}, color = {0, 0, 127}));
+  connect(height_veg, h_veg_data.h) annotation(
+    Line(points = {{-276, 320}, {-206, 320}, {-206, 322}}, color = {0, 0, 127}));
+  connect(ET_input, et_data.ET) annotation(
+    Line(points = {{-276, 278}, {-206, 278}, {-206, 281}}, color = {0, 0, 127}));
+  connect(field2.y, x2) annotation(
+    Line(points = {{91, 121}, {100, 121}, {100, 120}, {122, 120}}, color = {0, 0, 127}));
+  connect(field3.y, x3) annotation(
+    Line(points = {{221, 123}, {238, 123}, {238, 124}, {256, 124}}, color = {0, 0, 127}));
+  connect(field4.y, x4) annotation(
+    Line(points = {{353, 125}, {367, 125}, {367, 126}, {382, 126}}, color = {0, 0, 127}));
+  connect(channel.z_ch, x_ch) annotation(
+    Line(points = {{57, 296}, {70, 296}, {70, 362}, {174, 362}}, color = {0, 0, 127}));
+  connect(field1.y, x1) annotation(
+    Line(points = {{-41, 119}, {-23, 119}, {-23, 120}, {0, 120}}, color = {0, 0, 127}));
+  connect(u1, valve_portabattente3.x) annotation(
+    Line(points = {{-120, 218}, {-120, 187}}, color = {0, 0, 127}));
+  connect(valve_portabattente3.b_batt, field1.Port) annotation(
+    Line(points = {{-110, 173}, {-92, 173}, {-92, 98}, {-63, 98}, {-63, 103}}));
+  connect(valve_portabattente3.a_batt, channel.Port) annotation(
+    Line(points = {{-130, 173}, {-158, 173}, {-158, 258}, {38, 258}, {38, 282}}));
+  connect(u2, valve_portabattente31.x) annotation(
+    Line(points = {{22, 218}, {22, 190}}, color = {0, 0, 127}));
+  connect(valve_portabattente31.b_batt, field2.Port) annotation(
+    Line(points = {{32, 178}, {46, 178}, {46, 100}, {72, 100}, {72, 108}}));
+  connect(valve_portabattente31.a_batt, channel.Port) annotation(
+    Line(points = {{12, 178}, {-12, 178}, {-12, 258}, {38, 258}, {38, 282}}));
+  connect(u3, valve_portabattente32.x) annotation(
+    Line(points = {{156, 220}, {156, 186}}, color = {0, 0, 127}));
+  connect(valve_portabattente32.b_batt, field3.Port) annotation(
+    Line(points = {{166, 174}, {178, 174}, {178, 104}, {202, 104}, {202, 110}}));
+  connect(valve_portabattente32.a_batt, channel.Port) annotation(
+    Line(points = {{146, 174}, {124, 174}, {124, 258}, {38, 258}, {38, 282}}));
+  connect(u4, valve_portabattente33.x) annotation(
+    Line(points = {{290, 222}, {290, 192}}, color = {0, 0, 127}));
+  connect(valve_portabattente33.b_batt, field4.Port) annotation(
+    Line(points = {{300, 180}, {306, 180}, {306, 104}, {332, 104}, {332, 110}}));
+  connect(valve_portabattente33.a_batt, channel.Port) annotation(
+    Line(points = {{280, 180}, {224, 180}, {224, 258}, {38, 258}, {38, 282}}));
+  connect(constant_flow_source.a, channel.Port) annotation(
+    Line(points = {{-20, 306}, {6, 306}, {6, 266}, {38, 266}, {38, 282}}));
+  connect(valve_stramazzo.b_stram, fuga.a) annotation(
+    Line(points = {{142, 298}, {218, 298}, {218, 296}}));
+  connect(valve_stramazzo.a_stram, channel.Port) annotation(
+    Line(points = {{116, 298}, {80, 298}, {80, 268}, {38, 268}, {38, 282}}));
+protected
+  annotation(
+    Documentation(info = "<html><head></head><body><p><br></p>
+</body></html>"),
+    Diagram(coordinateSystem(extent = {{-300, 420}, {400, -20}}), graphics = {Rectangle(origin = {-60, 311}, lineColor = {255, 255, 0}, fillColor = {251, 255, 170}, fillPattern = FillPattern.Solid, extent = {{-56, 33}, {56, -33}}), Text(origin = {-99, 284}, extent = {{-21, 2}, {21, -2}}, textString = "source")}),
+    experiment(StartTime = 0, StopTime = 1.4778e+07, Tolerance = 1e-06, Interval = 60),
+  Icon(coordinateSystem(extent = {{-300, 380}, {400, 100}})));
+end prova13_FMU;

@@ -1,0 +1,62 @@
+within Field_Package.Valves;
+
+model valve_portabattente
+  //press atm
+  parameter SI.AbsolutePressure P_atm = System.Patm "atmospheric pressure" annotation(
+    Dialog(tab = "Assumptions"));
+  parameter SI.Acceleration g = System.g "gravity acceleration" annotation(
+    Dialog(tab = "Assumptions"));
+  parameter SI.Density rho = System.rho "water density " annotation(
+    Dialog(tab = "Assumptions"));
+  import Modelica.Constants.pi;
+  //raggio area valvola*
+  parameter SI.Length r = 0.2 "unit=m" annotation(
+    Dialog(group = "Geometric Parameters"));
+  //coefficiente di contrazione*
+  parameter Real Cc = 0.5 "Coefficiente di contrazione";
+  //altezza massimo dell'apertura della valvola(=diametro)
+  parameter SI.Height h_max = 2 * r "unit=m" annotation(
+    Dialog(group = "Geometric Parameters"));
+  //area massima valvola di 20cm
+  parameter SI.Area Av_max = pi * r ^ 2 annotation(
+    Dialog(group = "Geometric Parameters"));
+  //area di apertura valvola effettiva
+  SI.Area Av_eff;
+  //segnale saturato apertura/chiusura valvola 0<u<1
+  Real u;
+  //azione di controllo non saturata
+  Modelica.Blocks.Interfaces.RealInput x annotation(
+    Placement(visible = true, transformation(origin = {-4, 96}, extent = {{-34, -34}, {34, 34}}, rotation = -90), iconTransformation(origin = {-4, 86}, extent = {{-20, -20}, {20, 20}}, rotation = -90)));
+  Field_Package.Interfaces.fluxport_a a_batt annotation(
+    Placement(visible = true, transformation(origin = {-64, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -48}, extent = {{-22, -22}, {22, 22}}, rotation = 0)));
+  Field_Package.Interfaces.fluxport_b b_batt annotation(
+    Placement(visible = true, transformation(origin = {64, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {99, -49}, extent = {{-23, -23}, {23, 23}}, rotation = 0)));
+  parameter SI.Height height_port_a = 0 "altezza di a rispetto al fondo terreno" annotation(
+    Dialog(group = "Geometric parameters"));
+  //altezza rispetto al fondo terreno*
+  parameter SI.Height height_port_b = 0 "altezza di b rispetto al fondo terreno" annotation(
+    Dialog(group = "Geometric parameters", groupImage = "C:\Users\zoffo\Desktop\università\TESI\IMMAGINI\Cattura1.PNG"));
+  SI.AbsolutePressure press_a;
+  //pressure at point a
+  SI.AbsolutePressure press_b;
+  //pressure at point b
+equation
+  press_a = max(P_atm, a_batt.p - rho * g * height_port_a);
+  press_b = max(P_atm, b_batt.p - rho * g * height_port_b);
+// mass balance
+  a_batt.w + b_batt.w = 0;
+//the pressure difference drives the water flow
+  if press_a > press_b then
+     a_batt.w = rho * Cc * Av_eff * sqrt(2 * g * (press_a - press_b) / (rho * g));
+  else
+    b_batt.w = rho * Cc * Av_eff * sqrt(2 * g * (press_b - press_a) / (rho * g));
+  end if;
+  u = max(0, min(x, 1));
+//o forse mettere il valore dell'altezza come azione di controllo invece che parametro che varia tra 0 e 1;
+  Av_eff = r ^ 2 * (pi - acos(u * h_max / r - 1) - 0.5 * sin(2 * acos(u * h_max / r - 1)));
+//chiusura a saracinesca
+//Av_eff = r ^ 2 * (pi - 2*acos(u/2 * h_max / r - 1) - sin(2 * acos(u/2 * h_max / r - 1))); // ciusura a mezza a luna da sistemare
+  annotation(
+    Diagram(graphics = {Rectangle(origin = {-4, 5}, lineColor = {188, 188, 188}, fillColor = {157, 157, 157}, fillPattern = FillPattern.VerticalCylinder, extent = {{-18, 67}, {18, -67}}), Rectangle(origin = {-2, -20}, fillColor = {122, 122, 122}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-44, 20}, {44, -20}}), Polygon(origin = {-49, -22}, fillPattern = FillPattern.Solid, points = {{3, 22}, {-5, 30}, {-5, -30}, {5, -16}, {3, -16}, {3, 22}}), Polygon(origin = {45, -20}, rotation = 180, fillPattern = FillPattern.Solid, points = {{3, 22}, {-5, 30}, {-5, -30}, {5, -16}, {3, -16}, {3, 22}}), Text(origin = {-69, 5}, extent = {{-13, 15}, {13, -15}}, textString = "a"), Text(origin = {71, 5}, extent = {{-13, 15}, {13, -15}}, textString = "b")}),
+    Icon(graphics = {Text(origin = {-95, 1}, extent = {{-13, 15}, {13, -15}}, textString = "a"), Text(origin = {97, -1}, extent = {{-13, 15}, {13, -15}}, textString = "b"), Rectangle(origin = {0, -11}, lineColor = {188, 188, 188}, fillColor = {157, 157, 157}, fillPattern = FillPattern.VerticalCylinder, extent = {{-22, 83}, {22, -83}}), Polygon(origin = {-61, -44}, fillPattern = FillPattern.Solid, points = {{3, 22}, {-5, 32}, {-5, -40}, {5, -24}, {5, -22}, {3, 22}}), Polygon(origin = {63, -38}, rotation = 180, fillPattern = FillPattern.Solid, points = {{3, 32}, {-5, 42}, {-5, -30}, {5, -16}, {3, -16}, {3, 32}}), Rectangle(origin = {1, -46}, fillColor = {122, 122, 122}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-59, 24}, {59, -24}})}));
+end valve_portabattente;
